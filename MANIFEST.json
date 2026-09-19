@@ -1,0 +1,31 @@
+{
+  "project": "AXION Gen0-X",
+  "version": "0.1",
+  "top_module": "tt_um_codingmain1234_web_axion_gen0x",
+  "target": "Tiny Tapeout TTGF26c / gf180mcuD",
+  "tiles": "2x2",
+  "clock_hz": 16000000,
+  "peak_int8_mac_per_cycle": 8,
+  "peak_int8_mmac_per_second": 128,
+  "rtl": [
+    "src/project.v",
+    "src/axion_gen0x.v",
+    "src/axion_x_mul8_shared.v",
+    "src/axion_x_vcore_simd8.v",
+    "src/axion_x_sa_core_dot8.v"
+  ],
+  "verification": [
+    "REFERENCE_MODEL.py",
+    "test/test.py",
+    "test/tb.v",
+    "test/Makefile",
+    "SUBMISSION_CHECKLIST.md",
+    "VERIFICATION_STATUS.md"
+  ],
+  "configuration": [
+    "info.yaml",
+    "src/config.json",
+    ".github/workflows/gds.yaml",
+    ".github/workflows/test.yaml"
+  ]
+}
