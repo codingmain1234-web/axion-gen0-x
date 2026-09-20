@@ -72,7 +72,7 @@ module axion_x_sa_core_dot8 (
 
     assign relu_sat = sat_relu8(acc);
 
-    always @(posedge clk) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             acc        <= 40'sd0;
             valid_pipe <= 4'b0000;

@@ -103,7 +103,11 @@ module axion_gen0x (
         .relu_sat  (sa_relu_sat)
     );
 
-    always @(posedge clk) begin
+    // Use the Tiny Tapeout reset as an asynchronous reset so it maps to the
+    // dedicated reset pins of the standard-cell flip-flops.  Keeping reset
+    // out of the functional D path avoids a high-fanout reset mux becoming
+    // the design's timing bottleneck.
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             a_vec         <= 64'h0000000000000000;
             b_vec         <= 64'h0000000000000000;
