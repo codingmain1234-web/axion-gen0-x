@@ -9,13 +9,13 @@ silicon experiments.
 
 - GF180MCU (`gf180mcuD`) process through Tiny Tapeout TTGF26c
 - `2x2` tile allocation, approximately 0.22 mm² before final GDS measurement
-- 16 MHz implementation target; 20 MHz is a post-signoff experiment only
+- 15.5 MHz signoff target; 16 MHz and above are post-signoff experiments
 - Eight SIMD8 V-Core lanes
 - Eight shared signed INT8 multipliers
 - Pipelined signed DOT8 MAC with a 40-bit accumulator
 - Registered command predecode; external commands execute one cycle later
 - One DOT8 accepted per cycle after pipeline fill
-- 128 MMAC/s theoretical peak at 16 MHz
+- 124 MMAC/s theoretical peak at 15.5 MHz
 - ReLU with signed INT8 saturation and an on-chip self-test
 
 ## Commands

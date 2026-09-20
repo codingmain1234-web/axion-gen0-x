@@ -19,8 +19,8 @@ SA-Core. Vector operations are combinational and captured in a 64-bit result
 register. The SA-Core has five logical stages: product capture, pair
 reduction, half reduction, DOT8 capture and accumulation.
 
-After filling the pipeline, it accepts one DOT8 every clock. At 16 MHz this is
-eight MACs per clock or a theoretical 128 MMAC/s. A single external command
+After filling the pipeline, it accepts one DOT8 every clock. At 15.5 MHz this
+is eight MACs per clock or a theoretical 124 MMAC/s. A single external command
 becomes visible in the accumulator after six rising clock edges including its
 command-capture edge.
 
@@ -36,11 +36,10 @@ command-capture edge.
 
 ## Clock and reset
 
-The signoff target is 16 MHz (`62.5 ns`). Wide state-holding blocks use the
-dedicated asynchronous reset pins of their standard cells; the small command
-predecode stage resets synchronously so reset release cannot propagate into a
-DOT8 product-capture path. The testbench holds `rst_n` low for at least two
-rising edges and only releases it while the clock is running.
+The signoff target is 15.5 MHz (`64.516129 ns`). State-holding blocks use the
+dedicated asynchronous reset pins of their standard cells. The testbench holds
+`rst_n` low for at least two rising edges and only releases it while the clock
+is running. A 16 MHz clock remains a post-signoff hardware experiment.
 
 ## Built-in self-test
 

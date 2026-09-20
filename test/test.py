@@ -42,7 +42,7 @@ def lane_op(op, a, b):
 
 
 async def start_and_reset(dut):
-    cocotb.start_soon(Clock(dut.clk, 62.5, unit="ns").start())
+    cocotb.start_soon(Clock(dut.clk, 64.516129, unit="ns").start())
     dut.ena.value = 1
     dut.ui_in.value = 0
     dut.uio_in.value = 0

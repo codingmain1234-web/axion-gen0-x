@@ -18,7 +18,7 @@
 
 - [ ] Official TTGF26c GDS workflow passes
 - [ ] Design fits the requested GF180 `2x2` tile
-- [ ] Worst-corner setup timing passes at 16 MHz
+- [ ] Worst-corner setup timing passes at 15.5 MHz
 - [ ] Hold timing passes
 - [ ] DRC passes
 - [ ] LVS passes

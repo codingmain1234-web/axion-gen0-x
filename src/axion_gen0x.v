@@ -60,11 +60,7 @@ module axion_gen0x (
     reg       clear_q;
     reg       self_test_q;
 
-    // These small command-control registers use synchronous reset.  This
-    // prevents asynchronous reset release from propagating through dot_q into
-    // the product-capture muxes, while the two-cycle reset protocol still
-    // initializes every flag before commands are accepted.
-    always @(posedge clk) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             data_q       <= 8'h00;
             index_q      <= 3'd0;

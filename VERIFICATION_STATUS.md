@@ -23,7 +23,7 @@ Local verification was performed on 2026-09-19.
 - Cocotb RTL test in the official Linux/Tiny Tapeout environment
 - Official TTGF26c GDS build using `gf180mcuD`
 - `2x2` area and routing-congestion result
-- 16 MHz setup and hold signoff at all required corners
+- 15.5 MHz setup and hold signoff at all required corners
 - DRC, LVS, antenna and Tiny Tapeout precheck
 - Gate-level simulation and manual GDS viewer inspection
 

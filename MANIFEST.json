@@ -4,7 +4,7 @@
   "top_module": "tt_um_codingmain1234_web_axion_gen0x",
   "target": "Tiny Tapeout TTGF26c / gf180mcuD",
   "tiles": "2x2",
-  "clock_hz": 16000000,
+  "clock_hz": 15500000,
   "peak_int8_mac_per_cycle": 8,
   "peak_int8_mmac_per_second": 128,
   "rtl": [

@@ -29,6 +29,6 @@ other lanes zero. DOT8 must produce accumulator bytes
 ## Characterization
 
 Repeat BIST and DOT8 loops at increasing clock rates: 0.1, 1, 5, 10 and
-16 MHz. Only after 16 MHz is stable across expected voltage and temperature
-should 18 or 20 MHz be tried. Those higher clocks are experiments, not the
+15.5 MHz. Only after 15.5 MHz is stable across expected voltage and temperature
+should 16 MHz or higher be tried. Those higher clocks are experiments, not the
 signoff guarantee.
