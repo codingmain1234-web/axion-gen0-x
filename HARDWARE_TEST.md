@@ -6,7 +6,7 @@
 2. Start at a low clock such as 100 kHz and assert reset for at least two
    rising edges.
 3. Release reset, set `ena=1`, send command `3F`, and confirm output `A8`.
-4. Send command `50`, wait at least seven clocks, send `3E`, and confirm `A5`.
+4. Send command `50`, wait at least nine clocks, send `3E`, and confirm `A5`.
 
 ## SIMD8 test
 
@@ -18,7 +18,7 @@ result lane must be `09`.
 
 1. Send `40` to clear the accumulator.
 2. Load A=`[1,2,3,4,5,6,7,8]` and B=`[8,7,6,5,4,3,2,1]`.
-3. Send `28`, wait four more rising edges, then send `3D`. Output must be 120.
+3. Send `28`, wait five more rising edges, then send `3D`. Output must be 120.
 4. Read commands `38`–`3C`; the five little-endian bytes must encode 120.
 5. Repeat `28`; the full accumulator must become 240 while ReLU output is 127.
 

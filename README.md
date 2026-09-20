@@ -13,6 +13,7 @@ silicon experiments.
 - Eight SIMD8 V-Core lanes
 - Eight shared signed INT8 multipliers
 - Pipelined signed DOT8 MAC with a 40-bit accumulator
+- Registered command predecode; external commands execute one cycle later
 - One DOT8 accepted per cycle after pipeline fill
 - 128 MMAC/s theoretical peak at 16 MHz
 - ReLU with signed INT8 saturation and an on-chip self-test

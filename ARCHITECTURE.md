@@ -13,15 +13,16 @@ B register: 8 x 8-bit ─┘
                                                   └─> ReLU / INT8 saturation
 ```
 
-The multiplier bank is shared by vector MUL-low and the SA-Core. Vector
-operations are combinational and captured in a 64-bit result register. The
-SA-Core has five logical stages: product capture, pair reduction, half
-reduction, DOT8 capture and accumulation.
+The external command and its data are first captured by a registered
+predecode stage. The multiplier bank is shared by vector MUL-low and the
+SA-Core. Vector operations are combinational and captured in a 64-bit result
+register. The SA-Core has five logical stages: product capture, pair
+reduction, half reduction, DOT8 capture and accumulation.
 
 After filling the pipeline, it accepts one DOT8 every clock. At 16 MHz this is
-eight MACs per clock or a theoretical 128 MMAC/s. A single command becomes
-visible in the accumulator after five rising clock edges including its command
-edge.
+eight MACs per clock or a theoretical 128 MMAC/s. A single external command
+becomes visible in the accumulator after six rising clock edges including its
+command-capture edge.
 
 ## Numeric behavior
 
@@ -35,9 +36,10 @@ edge.
 
 ## Clock and reset
 
-The signoff target is 16 MHz (`62.5 ns`). External active-low reset is sampled
-into a local reset register, avoiding direct high-fanout use across the design.
-The testbench therefore holds `rst_n` low for at least two rising edges.
+The signoff target is 16 MHz (`62.5 ns`). External active-low reset maps to the
+dedicated asynchronous reset pins of state-holding standard cells. The
+testbench holds `rst_n` low for at least two rising edges and only releases it
+while the clock is running.
 
 ## Built-in self-test
 

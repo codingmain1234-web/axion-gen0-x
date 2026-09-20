@@ -10,7 +10,7 @@ load B, `20`–`26` execute vector operations, and `28` starts DOT8 MAC.
 Commands `30`–`37` read vector lanes and `38`–`3C` read the signed 40-bit
 accumulator in little-endian byte order.
 
-For a quick check, issue command `50`, wait at least seven clocks, then issue
+For a quick check, issue command `50`, wait at least nine clocks, then issue
 `3E`. Output `A5` indicates that the real SIMD ADD and DOT8 datapaths passed
 their built-in test. The version command `3F` returns `A8`.
 

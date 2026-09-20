@@ -63,9 +63,10 @@ async def pulse_command(dut, command, data=0):
     await RisingEdge(dut.clk)
     await Timer(1, unit="ns")
 
-    # DOT8 commits on the command edge plus four following pipeline edges.
+    # The registered command predecode adds one cycle before the four-stage
+    # DOT8 data pipeline; wait through the accumulator commit edge.
     if command == CMD_DOT8_MAC:
-        for _ in range(3):
+        for _ in range(4):
             await RisingEdge(dut.clk)
             await Timer(1, unit="ns")
 

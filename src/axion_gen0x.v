@@ -41,10 +41,80 @@ module axion_gen0x (
     reg [2:0]  bist_state;
     reg [7:0]  bist_status;
 
-    wire vector_execute = (command >= CMD_VEC_ADD) &&
-                          (command <= CMD_VEC_MIN) &&
-                          (bist_state == 3'd0);
-    wire [2:0] alu_op = (bist_state == 3'd1) ? 3'd0 : command[2:0];
+    // Registered command predecode.  External command pins only drive this
+    // shallow stage; the wide datapath is controlled by local flip-flops on
+    // the following cycle.  This preserves one-command-per-cycle throughput
+    // while removing long input-to-register timing paths.
+    reg [7:0] data_q;
+    reg [2:0] index_q;
+    reg [2:0] vector_op_q;
+    reg       load_a_q;
+    reg       load_b_q;
+    reg       vector_q;
+    reg       dot_q;
+    reg       read_vec_q;
+    reg       read_acc_q;
+    reg       read_relu_q;
+    reg       read_bist_q;
+    reg       read_ver_q;
+    reg       clear_q;
+    reg       self_test_q;
+
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            data_q       <= 8'h00;
+            index_q      <= 3'd0;
+            vector_op_q  <= 3'd0;
+            load_a_q     <= 1'b0;
+            load_b_q     <= 1'b0;
+            vector_q     <= 1'b0;
+            dot_q        <= 1'b0;
+            read_vec_q   <= 1'b0;
+            read_acc_q   <= 1'b0;
+            read_relu_q  <= 1'b0;
+            read_bist_q  <= 1'b0;
+            read_ver_q   <= 1'b0;
+            clear_q      <= 1'b0;
+            self_test_q  <= 1'b0;
+        end else begin
+            load_a_q    <= 1'b0;
+            load_b_q    <= 1'b0;
+            vector_q    <= 1'b0;
+            dot_q       <= 1'b0;
+            read_vec_q  <= 1'b0;
+            read_acc_q  <= 1'b0;
+            read_relu_q <= 1'b0;
+            read_bist_q <= 1'b0;
+            read_ver_q  <= 1'b0;
+            clear_q     <= 1'b0;
+            self_test_q <= 1'b0;
+
+            if (ena) begin
+                data_q      <= data_in;
+                index_q     <= command[2:0];
+                vector_op_q <= command[2:0];
+                load_a_q    <= (command >= CMD_LOAD_A0) &&
+                               (command <= CMD_LOAD_A7);
+                load_b_q    <= (command >= CMD_LOAD_B0) &&
+                               (command <= CMD_LOAD_B7);
+                vector_q    <= (command >= CMD_VEC_ADD) &&
+                               (command <= CMD_VEC_MIN);
+                dot_q       <= (command == CMD_DOT8_MAC);
+                read_vec_q  <= (command >= CMD_READ_VEC0) &&
+                               (command <= CMD_READ_VEC7);
+                read_acc_q  <= (command >= CMD_READ_ACC0) &&
+                               (command <= CMD_READ_ACC4);
+                read_relu_q <= (command == CMD_READ_RELU);
+                read_bist_q <= (command == CMD_READ_BIST);
+                read_ver_q  <= (command == CMD_READ_VER);
+                clear_q     <= (command == CMD_CLEAR_ACC);
+                self_test_q <= (command == CMD_SELF_TEST);
+            end
+        end
+    end
+
+    wire vector_execute = vector_q && (bist_state == 3'd0);
+    wire [2:0] alu_op = (bist_state == 3'd1) ? 3'd0 : vector_op_q;
     wire [63:0] vector_y;
     wire [63:0] mul_low_vec;
     wire signed [15:0] product0;
@@ -78,9 +148,9 @@ module axion_gen0x (
         .y_vec       (vector_y)
     );
 
-    wire clear_acc = (command == CMD_CLEAR_ACC) ||
-                     ((command == CMD_SELF_TEST) && (bist_state == 3'd0));
-    wire mac_en = ((command == CMD_DOT8_MAC) && (bist_state == 3'd0)) ||
+    wire clear_acc = clear_q ||
+                     (self_test_q && (bist_state == 3'd0));
+    wire mac_en = (dot_q && (bist_state == 3'd0)) ||
                   (bist_state == 3'd1);
     wire signed [39:0] sa_acc;
     wire [7:0] sa_relu_sat;
@@ -137,49 +207,49 @@ module axion_gen0x (
                 bist_state <= 3'd0;
                 read_mode  <= READ_BIST;
             end else begin
-                if ((command >= CMD_LOAD_A0) && (command <= CMD_LOAD_A7)) begin
-                    case (command[2:0])
-                        3'd0: a_vec[7:0]   <= data_in;
-                        3'd1: a_vec[15:8]  <= data_in;
-                        3'd2: a_vec[23:16] <= data_in;
-                        3'd3: a_vec[31:24] <= data_in;
-                        3'd4: a_vec[39:32] <= data_in;
-                        3'd5: a_vec[47:40] <= data_in;
-                        3'd6: a_vec[55:48] <= data_in;
-                        default: a_vec[63:56] <= data_in;
+                if (load_a_q) begin
+                    case (index_q)
+                        3'd0: a_vec[7:0]   <= data_q;
+                        3'd1: a_vec[15:8]  <= data_q;
+                        3'd2: a_vec[23:16] <= data_q;
+                        3'd3: a_vec[31:24] <= data_q;
+                        3'd4: a_vec[39:32] <= data_q;
+                        3'd5: a_vec[47:40] <= data_q;
+                        3'd6: a_vec[55:48] <= data_q;
+                        default: a_vec[63:56] <= data_q;
                     endcase
-                end else if ((command >= CMD_LOAD_B0) && (command <= CMD_LOAD_B7)) begin
-                    case (command[2:0])
-                        3'd0: b_vec[7:0]   <= data_in;
-                        3'd1: b_vec[15:8]  <= data_in;
-                        3'd2: b_vec[23:16] <= data_in;
-                        3'd3: b_vec[31:24] <= data_in;
-                        3'd4: b_vec[39:32] <= data_in;
-                        3'd5: b_vec[47:40] <= data_in;
-                        3'd6: b_vec[55:48] <= data_in;
-                        default: b_vec[63:56] <= data_in;
+                end else if (load_b_q) begin
+                    case (index_q)
+                        3'd0: b_vec[7:0]   <= data_q;
+                        3'd1: b_vec[15:8]  <= data_q;
+                        3'd2: b_vec[23:16] <= data_q;
+                        3'd3: b_vec[31:24] <= data_q;
+                        3'd4: b_vec[39:32] <= data_q;
+                        3'd5: b_vec[47:40] <= data_q;
+                        3'd6: b_vec[55:48] <= data_q;
+                        default: b_vec[63:56] <= data_q;
                     endcase
                 end else if (vector_execute) begin
                     vector_result <= vector_y;
                     read_mode     <= READ_VECTOR;
                     read_index    <= 3'd0;
-                end else if (command == CMD_DOT8_MAC) begin
+                end else if (dot_q) begin
                     read_mode <= READ_RELU;
-                end else if ((command >= CMD_READ_VEC0) && (command <= CMD_READ_VEC7)) begin
+                end else if (read_vec_q) begin
                     read_mode  <= READ_VECTOR;
-                    read_index <= command[2:0];
-                end else if ((command >= CMD_READ_ACC0) && (command <= CMD_READ_ACC4)) begin
+                    read_index <= index_q;
+                end else if (read_acc_q) begin
                     read_mode  <= READ_ACC;
-                    read_index <= command[2:0];
-                end else if (command == CMD_READ_RELU) begin
+                    read_index <= index_q;
+                end else if (read_relu_q) begin
                     read_mode <= READ_RELU;
-                end else if (command == CMD_READ_BIST) begin
+                end else if (read_bist_q) begin
                     read_mode <= READ_BIST;
-                end else if (command == CMD_READ_VER) begin
+                end else if (read_ver_q) begin
                     read_mode <= READ_VER;
-                end else if (command == CMD_CLEAR_ACC) begin
+                end else if (clear_q) begin
                     read_mode <= READ_RELU;
-                end else if (command == CMD_SELF_TEST) begin
+                end else if (self_test_q) begin
                     a_vec       <= 64'h0807060504030201;
                     b_vec       <= 64'h0102030405060708;
                     bist_status <= 8'h01;
