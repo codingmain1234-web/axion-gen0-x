@@ -36,10 +36,11 @@ command-capture edge.
 
 ## Clock and reset
 
-The signoff target is 16 MHz (`62.5 ns`). External active-low reset maps to the
-dedicated asynchronous reset pins of state-holding standard cells. The
-testbench holds `rst_n` low for at least two rising edges and only releases it
-while the clock is running.
+The signoff target is 16 MHz (`62.5 ns`). Wide state-holding blocks use the
+dedicated asynchronous reset pins of their standard cells; the small command
+predecode stage resets synchronously so reset release cannot propagate into a
+DOT8 product-capture path. The testbench holds `rst_n` low for at least two
+rising edges and only releases it while the clock is running.
 
 ## Built-in self-test
 
