@@ -10,12 +10,6 @@ module axion_gen0x (
     output reg  [7:0] data_out
 );
 
-    reg reset_active;
-    always @(posedge clk)
-        reset_active <= !rst_n;
-
-    wire core_rst_n = !reset_active;
-
     localparam [7:0] CMD_LOAD_A0    = 8'h10;
     localparam [7:0] CMD_LOAD_A7    = 8'h17;
     localparam [7:0] CMD_LOAD_B0    = 8'h18;
@@ -93,7 +87,7 @@ module axion_gen0x (
 
     axion_x_sa_core_dot8 u_sa_core (
         .clk       (clk),
-        .rst_n     (core_rst_n),
+        .rst_n     (rst_n),
         .ena       (ena),
         .clear_acc (clear_acc),
         .mac_en    (mac_en),
@@ -110,7 +104,7 @@ module axion_gen0x (
     );
 
     always @(posedge clk) begin
-        if (!core_rst_n) begin
+        if (!rst_n) begin
             a_vec         <= 64'h0000000000000000;
             b_vec         <= 64'h0000000000000000;
             vector_result <= 64'h0000000000000000;
