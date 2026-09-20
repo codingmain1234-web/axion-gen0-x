@@ -42,7 +42,9 @@ def lane_op(op, a, b):
 
 
 async def start_and_reset(dut):
-    cocotb.start_soon(Clock(dut.clk, 64.516129, unit="ns").start())
+    # Icarus uses 1 ps precision, so use the nearest exactly representable
+    # period to the 64.516129 ns (15.5 MHz) physical-design constraint.
+    cocotb.start_soon(Clock(dut.clk, 64.516, unit="ns").start())
     dut.ena.value = 1
     dut.ui_in.value = 0
     dut.uio_in.value = 0
