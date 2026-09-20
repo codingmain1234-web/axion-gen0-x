@@ -5,10 +5,10 @@ shuttle. It doubles the lane count and theoretical INT8 MAC throughput of
 Gen0-P while keeping a small command-driven interface suitable for first
 silicon experiments.
 
-## Target specification
+## Signoff specification
 
 - GF180MCU (`gf180mcuD`) process through Tiny Tapeout TTGF26c
-- `2x2` tile allocation, approximately 0.22 mm² before final GDS measurement
+- `2x2` tile allocation; final die area 0.231396 mm²
 - 15.5 MHz signoff target; 16 MHz and above are post-signoff experiments
 - Eight SIMD8 V-Core lanes
 - Eight shared signed INT8 multipliers
@@ -58,9 +58,14 @@ cd test
 make
 ```
 
-The GitHub workflows run RTL simulation, GDS generation, precheck and
-gate-level simulation. Physical fit, timing and signoff are intentionally not
-claimed until those workflows produce a successful Gen0-X build.
+The official GitHub workflows have passed RTL simulation, GDS generation,
+Tiny Tapeout precheck and gate-level simulation. The final 15.5 MHz build has
+1.075 ns worst setup slack, 0.470 ns worst hold slack, zero timing violations,
+zero final routing/Magic DRC errors, zero LVS errors and zero antenna
+violations. The layout contains 9,117 standard cells at 85.73% utilization.
+
+These results make v0.1 a physically verified tapeout candidate. They do not
+mean that a Tiny Tapeout submission or fabrication order has been placed.
 
 See `ARCHITECTURE.md`, `HARDWARE_TEST.md` and `SUBMISSION_CHECKLIST.md` for
 implementation and tapeout details.

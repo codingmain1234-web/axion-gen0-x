@@ -12,24 +12,24 @@
 - [x] Yosys sequential SAT smoke checks pass for version, SIMD ADD,
   pipelined DOT8 throughput and BIST
 - [x] Local Yosys hierarchy, latch, structural and full synthesis checks pass
-- [ ] Cocotb RTL simulation passes in the official Tiny Tapeout container
+- [x] Cocotb RTL simulation passes in the official Tiny Tapeout container
 
 ## Physical implementation
 
-- [ ] Official TTGF26c GDS workflow passes
-- [ ] Design fits the requested GF180 `2x2` tile
-- [ ] Worst-corner setup timing passes at 15.5 MHz
-- [ ] Hold timing passes
-- [ ] DRC passes
-- [ ] LVS passes
-- [ ] Antenna checks pass
-- [ ] Gate-level simulation passes
-- [ ] GDS viewer inspected manually
+- [x] Official TTGF26c GDS workflow passes
+- [x] Design fits the requested GF180 `2x2` tile
+- [x] Worst-corner setup timing passes at 15.5 MHz
+- [x] Hold timing passes
+- [x] DRC passes
+- [x] LVS passes
+- [x] Antenna checks pass
+- [x] Gate-level simulation passes
+- [x] GDS viewer inspected manually
 
 ## Submission
 
-- [ ] GitHub repository and project metadata reviewed
-- [ ] Final source archive created
-- [ ] Final GDS artifact archived
+- [x] GitHub repository and project metadata reviewed
+- [x] Final source archive created for the v0.1 release
+- [x] Final GDS artifact archived from Actions run `35499734929`
 - [ ] Tiny Tapeout submission form completed
 - [ ] Order placed only after every required check above passes
